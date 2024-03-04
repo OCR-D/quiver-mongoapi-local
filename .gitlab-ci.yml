@@ -15,7 +15,7 @@ variables:
   DEST: "docker.gitlab.gwdg.de/subugoe/ocr-d/quiver-mongoapi-local"
   IMAGE_NAME: "${DEST}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}"
 
-.build_image:
+build_image:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
