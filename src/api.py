@@ -31,7 +31,7 @@ app.add_middleware(
 USERNAME = os.getenv('USERNAME')
 PASSWORD = os.getenv('PASSWORD')
 
-CLIENT = MongoClient(f'mongodb://{USERNAME}:{PASSWORD}@localhost:27017/results?authSource=results')
+CLIENT = MongoClient(f'mongodb://{USERNAME}:{PASSWORD}@quiver-mongodb-1:27017/results?authSource=results')
 DB = CLIENT.results
 COLL = DB.quiver
 
