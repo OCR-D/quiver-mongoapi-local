@@ -1,0 +1,34 @@
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+stages:
+- test
+- build
+
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
+
+variables:
+  DEST: "docker.gitlab.gwdg.de/subugoe/ocr-d/quiver-mongoapi-local"
+  IMAGE_NAME: "${DEST}:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}"
+
+.build_image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+    - ''
+  except:
+    - triggers
+  script:
+  - echo "Pushing image to ${DEST}"
+  - mkdir -p /kaniko/.docker
+  - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  - /kaniko/executor 
+    --context "${CI_PROJECT_DIR}" 
+    --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+    --build-arg build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+    --destination ${IMAGE_NAME}
