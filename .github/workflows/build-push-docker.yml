@@ -13,6 +13,10 @@ on:
   release:
     types: [published]
 
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: ocrd/quiver-mongoapi-local
+
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
