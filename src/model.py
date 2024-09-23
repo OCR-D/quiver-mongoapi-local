@@ -109,7 +109,7 @@ class Release(BaseModel):
 
 class DocumentWide(BaseModel):
     wall_time: float
-    cpu_time: float
+    cpu_time: float | None = None
     cer_mean: float
     cer_median: float
     cer_range: List[float]
